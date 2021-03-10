@@ -8,6 +8,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.util.StringUtils;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 @SpringBootApplication
@@ -27,18 +30,41 @@ public class NnpiaCv3Application {
 		}
 
 		@RequestMapping(value = "/greeting", method = {RequestMethod.GET})
-		public String requestGreeting(@RequestParam(name="name", required=false, defaultValue="World") String name, Model model){
+		public String requestGreeting(@RequestParam(name= "date", required=false, defaultValue="01.01.2021" ) String customDate, Model model){
 			counterService.add();
-			model.addAttribute("name", StringUtils.toUpperCase(name, Locale.ENGLISH));
+			model.addAttribute("date", StringUtils.toUpperCase(customDate, Locale.ENGLISH));
 			model.addAttribute("counter", counterService.getCounter());
 			return "greeting";
 		}
-		@GetMapping(value = "/welcome/{name}")
-		public String requestWelcome(@PathVariable("name") String username, Model model){
+		@GetMapping(value = "/welcome")
+		public String requestWelcome(Model model){
 			counterService.add();
-			model.addAttribute("name", StringUtils.toUpperCase(username, Locale.ENGLISH));
+			DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
+			String date = df.format(new Date());
+			model.addAttribute("date", StringUtils.toUpperCase(date, Locale.ENGLISH));
 			model.addAttribute("counter", counterService.getCounter());
 			return "greeting";
+		}
+	}
+	@Controller
+	@RequestMapping("inside")
+	public class GreetingController2 {
+
+		private final CounterService counterService;
+
+		public GreetingController2(@Qualifier("counterService2Imp") CounterService counterService) {
+			this.counterService = counterService;
+		}
+
+		@GetMapping(value = "/welcome")
+		public String requestWelcome(@RequestParam(name="name", defaultValue="World") String name, Model model){
+			counterService.add();
+			name = name.toLowerCase();
+			name = name.substring(0,1).toUpperCase() + name.substring(1);
+			int index = name.indexOf(" ") + 1;
+			name = name.substring(0, index) + name.substring(index,index + 1).toUpperCase() + name.substring(index + 1);
+			model.addAttribute("name", name);
+			return "greeting2";
 		}
 	}
 }

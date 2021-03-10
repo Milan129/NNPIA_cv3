@@ -2,10 +2,32 @@
 <html xmlns:th="http://ww.thymeleaf.org" lang="en">
 <head>
     <meta http-equiv="Content-Type" charset="UTF-8">
-    <title>Title</title>
+    <title>Login</title>
+    <style>
+        body {
+            background-color: #170727;
+            color: white;
+        }
+        input {
+            background-color: black;
+            color: white;
+            border-radius: 4px;
+            margin: 4px;
+            padding: 4px;
+        }
+        input:hover {
+            background-color: #333399;
+            transition: 0.5s;
+        }
+    </style>
 </head>
 <body>
-<p th:text="'Hello, ' + ${name} + '!'" />
-<p th:text="'You are , ' + ${counter} + '. visitor!'" />
+<p th:text="${date}" />
+<p th:text="'You are ' + ${counter} + '. visitor!'" />
+<form action="/inside/welcome/">
+    <label for="fname">Full name:</label><br>
+    <input type="text" id="fname" name="name" value="Milan Horak"><br>
+    <input type="submit" value="Submit">
+</form>
 </body>
 </html>
